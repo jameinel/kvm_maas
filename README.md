@@ -1,7 +1,7 @@
 # MAAS in KVM node creator
 Helper to create KVM nodes for a virtual MAAS deployment. Creates a VM, network boots it (MAAS takes care of this),
 adds it as a node and commissions it. Sets up power on/off from MAAS to KVM so it can power up your VMs and check their
-power state. It doesn't set up MAAS for you. See http://www.teale.de/tealeg/computing/cloud/kvm_maas_juju_openstack.html
+power state. It doesn't set up MAAS for you. See https://insights.ubuntu.com/2013/11/15/interested-in-maas-and-juju-heres-how-to-try-it-in-a-vm/
 for some good instructions; this script takes care of section 5, 'Create a VM as a client'. 
 
 To configure create ~/.config/kvm_maas.yaml with the following content:
@@ -11,7 +11,7 @@ vm_host: <host name or IP address of the KVM host>
 vm_host_user: <user name for SSHing into vm_host>
 vm_image_path: <where to store the KVM disk images>
 ```
-Assuming you have done all steps up to section 5 in http://www.teale.de/tealeg/computing/cloud/kvm_maas_juju_openstack.html
+Assuming you have done all steps up to section 5 in https://insights.ubuntu.com/2013/11/15/interested-in-maas-and-juju-heres-how-to-try-it-in-a-vm/
 then you can add a node like this:
 ```bash
 ./kmaas.py maas_node_1
