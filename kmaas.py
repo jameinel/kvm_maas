@@ -18,14 +18,14 @@ def shell(cmd):
 
 
 class KVMMAASNode():
-    def __init__(self, conf):
-        self.name = conf['machine_name']
+    def __init__(self, settings):
+        self.name = settings['machine_name']
         self.path = os.path.join(
-            conf['vm_image_path'], self.name + '.qcow2')
-        self.settings = conf
+            settings['vm_image_path'], self.name + '.qcow2')
+        self.settings = settings
 
     def create_vm(self):
-        with open('template.xml') as template:
+        with open(self.settings['template']) as template:
             conf = xmltodict.parse(template.read())
         conf['domain']['name'] = self.name
         conf['domain']['devices']['disk']['source']['@file'] = self.path
@@ -43,8 +43,18 @@ class KVMMAASNode():
         # We now have a new node. Find its MAC address so we can identify it in MAAS
         conf = xmltodict.parse(grab('virsh dumpxml ' + self.name))
 
-        # TODO: Cope with >1 network interface
-        self.mac_address = conf['domain']['devices']['interface']['mac']['@address']
+        interfaces = conf['domain']['devices']['interface']
+        if isinstance(interfaces, list):
+            # Just grab the mac_address of the first interface, we'll just
+            # require it to be the one that boots and can find MAAS for now
+            interface = interfaces[0]
+        elif isinstance(interfaces, dict): # actually OrderedDict
+            interface = interfaces
+        else:
+            raise RuntimeError("don't know how to handle interfaces that is a %s".format(
+                type(interfaces)))
+
+        self.mac_address = interface['mac']['@address']
 
     def wait_for_power_off(self):
         print 'Waiting for node to finish initial boot'
@@ -92,16 +102,19 @@ def configure():
     parser = argparse.ArgumentParser(description='Create a KVM mode for our virtual MAAS cluster.')
     parser.add_argument('name', metavar='N', type=str,
                        help='name of new machine')
+    parser.add_argument('--template', '-t', default='template.xml',
+                        help='virsh XML template file to use')
 
     args = parser.parse_args()
 
     with open(os.path.expanduser('~/.config/kvm_maas.yaml')) as f:
-        conf = yaml.load(f)
+        settings = yaml.load(f)
 
-    conf['machine_name'] = args.name
-    return conf
+    settings['machine_name'] = args.name
+    settings['template'] = args.template
+    return settings
 
 if __name__ == '__main__':
-    conf = configure()
-    node = KVMMAASNode(conf)
+    settings = configure()
+    node = KVMMAASNode(settings)
     node.new()
