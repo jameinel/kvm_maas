@@ -83,7 +83,7 @@ class KVMMAASNode():
             for node in nodes:
                 # TODO: Cope with >1 network interface
                 if node['macaddress_set'][0]['mac_address'] == self.mac_address:
-                    conf['system_id'] = node['system_id']
+                    self.settings['system_id'] = node['system_id']
                     print 'Setting power control'
                     shell('maas {maas_name} node update {system_id} power_type="virsh" '
                           'power_parameters_power_address=qemu+ssh://{vm_host_user}@{vm_host}/system '
