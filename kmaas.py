@@ -93,8 +93,6 @@ class KVMMAASNode():
                     #shell('virsh start ' + args.name)
                     shell('maas {maas_name} nodes accept nodes={system_id}'.format(**self.settings))
                     node_not_found = False
-                    shell('maas {maas_name} node commission {system_id} '
-                          ' skip_networking=0 skip_storage=0'.format(**self.settings))
 
     def new(self):
         self.create_vm()
