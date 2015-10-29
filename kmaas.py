@@ -163,6 +163,8 @@ class KVMMAASNode():
         off_count = 0
         while True:
             state = grab('virsh domstate ' + self.name).rstrip()
+            if debug:
+                print 'state: {!r}'.format(status)
             if state == 'shut off':
                 off_count += 1
                 if off_count == 3:
