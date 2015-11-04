@@ -272,6 +272,10 @@ def configure():
     with open(os.path.expanduser('~/.config/kvm_maas.yaml')) as f:
         settings = yaml.load(f)
 
+    if "_" in args.name:
+        print "MAAS does not allow '_' in machine names"
+        exit(1)
+
     settings['machine_name'] = args.name
     settings['template'] = args.template
     settings['subnets'] = args.subnet
