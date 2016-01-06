@@ -1,55 +1,47 @@
 <domain type='kvm'>
-  <name>maas_pxe_2</name>
-  <uuid>442425fd-9f5e-4fd6-a07a-a7828ae66626</uuid>
-  <memory unit='KiB'>1048576</memory>
-  <currentMemory unit='KiB'>1048576</currentMemory>
+  <name>m1-dual1</name>
+  <uuid>911c5a1b-8c4b-e31b-a7cb-d55cd97ef6a4</uuid>
+  <memory unit='KiB'>524288</memory>
+  <currentMemory unit='KiB'>524288</currentMemory>
   <vcpu placement='static'>1</vcpu>
   <os>
     <type arch='x86_64' machine='pc-i440fx-trusty'>hvm</type>
     <boot dev='network'/>
+    <boot dev='hd'/>
   </os>
   <features>
     <acpi/>
     <apic/>
     <pae/>
   </features>
+  <clock offset='utc'/>
   <on_poweroff>destroy</on_poweroff>
   <on_reboot>restart</on_reboot>
   <on_crash>restart</on_crash>
   <devices>
     <emulator>/usr/bin/kvm-spice</emulator>
     <disk type='file' device='disk'>
-      <driver name='qemu' type='qcow2'/>
-      <source file='THIS_WILL_BE_REPLACED.qcow2'/>
-      <target dev='sda' bus='sata'/>
-      <address type='drive' controller='0' bus='0' target='0' unit='0'/>
+      <driver name='qemu' type='raw'/>
+      <source file='/var/lib/libvirt/images/m1-dual1.img'/>
+      <target dev='vda' bus='virtio'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x0'/>
     </disk>
-    <controller type='usb' index='0' model='ich9-ehci1'>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x7'/>
-    </controller>
-    <controller type='usb' index='0' model='ich9-uhci1'>
-      <master startport='0'/>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0' multifunction='on'/>
-    </controller>
-    <controller type='usb' index='0' model='ich9-uhci2'>
-      <master startport='2'/>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x1'/>
-    </controller>
-    <controller type='usb' index='0' model='ich9-uhci3'>
-      <master startport='4'/>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x2'/>
+    <controller type='usb' index='0'>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x2'/>
     </controller>
     <controller type='pci' index='0' model='pci-root'/>
-    <controller type='ide' index='0'>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x1'/>
-    </controller>
     <controller type='virtio-serial' index='0'>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x0'/>
     </controller>
     <interface type='network'>
-      <source network='default'/>
-      <model type='rtl8139'/>
+      <source network='maas'/>
+      <model type='virtio'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
+    </interface>
+    <interface type='network'>
+      <source network='maas_ceph_cluster'/>
+      <model type='virtio'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x0'/>
     </interface>
     <serial type='pty'>
       <target port='0'/>
@@ -65,22 +57,15 @@
     <input type='keyboard' bus='ps2'/>
     <graphics type='spice' autoport='yes'/>
     <sound model='ich6'>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/>
     </sound>
     <video>
       <model type='qxl' ram='65536' vram='65536' heads='1'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/>
     </video>
-    <redirdev bus='usb' type='spicevmc'>
-    </redirdev>
-    <redirdev bus='usb' type='spicevmc'>
-    </redirdev>
-    <redirdev bus='usb' type='spicevmc'>
-    </redirdev>
-    <redirdev bus='usb' type='spicevmc'>
-    </redirdev>
     <memballoon model='virtio'>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x08' function='0x0'/>
     </memballoon>
   </devices>
 </domain>
+

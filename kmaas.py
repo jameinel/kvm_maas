@@ -240,7 +240,7 @@ class KVMMAASNode():
                 params = self.settings.copy()
                 params['interface_id'] = interface['id']
                 params['subnet_id'] = maas_subnet.maas_id
-                shell('maas {maas_name} node-interface link-subnet '
+                shell('maas {maas_name} interface link-subnet '
                       '{system_id} {interface_id} '
                       'mode=AUTO subnet={subnet_id}'.format(**params))
 
