@@ -133,7 +133,7 @@ class KVMMAASNode():
         with open('node.xml', 'w') as node:
             node.write(xmltodict.unparse(conf, pretty=True))
 
-        shell('qemu-img create -f qcow2 ' + self.path + ' 32G')
+        shell('qemu-img create -f qcow2 ' + self.path + ' 8G -o preallocation=metadata')
         shell('virsh define node.xml')
         print 'node defined, starting'
         shell('virsh start ' + self.name)
